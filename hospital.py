@@ -18,7 +18,30 @@ class Hospital(object):
         beds = []
         for i in range(0, self.cap):
             beds.append({
-                "bed_id": 1,
+                "bed_id": i,
                 "Available": True
             })
         return beds
+
+    def admit(self, patient):
+        if len(self.patients) <= self.cap:
+            self.patients.append(patient)
+            for i in range(0, len(self.beds)):
+                if self.beds[i]["Available"]:
+                    patient.bed_num = self.beds[i]["bed_id"]
+                    self.beds[i]["Available"] = False
+                    break
+            print("Patient #{} admittied to bed #{}".format(patient.id, patient.bed_num))
+        else:
+            "Hospital is at full capacity"
+    
+    def discharge(self, patient_id):
+        for patient in self.patients:
+            if patient.id == patient_id:
+                for bed in self.beds:
+                    if bed["bed_id"] == patient.bed_num:
+                        bed["Available"] = True
+                        break
+                self.patients.remove(patient)
+                return "Patient #{} successfully discharged. Bed #{} now available".format(patient.id, patient.bed_num)
+        return "Patient not found"
